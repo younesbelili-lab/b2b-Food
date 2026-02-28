@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So Food Services - Commande B2B</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a2e1a 0%, #000000 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem 2rem;
+            border-bottom: 3px solid #2d5f3f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4ade80;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.7rem 1.5rem;
+            background: #2d5f3f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #4ade80;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: #4ade80;
+            color: #000;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .deadline-banner {
+            background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+        }
+
+        .categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 1rem 2rem;
+            background: rgba(45, 95, 63, 0.6);
+            border: 2px solid #2d5f3f;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #2d5f3f;
+            border-color: #4ade80;
+            transform: scale(1.05);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-card {
+            background: rgba(20, 40, 28, 0.8);
+            border: 2px solid #2d5f3f;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            border-color: #4ade80;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(74, 222, 128, 0.2);
+        }
+
+        .product-image {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: #a3e635;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .qty-btn {
+            width: 35px;
+            height: 35px;
+            background: #2d5f3f;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #4ade80;
+            color: #000;
+        }
+
+        .qty-input {
+            width: 60px;
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #2d5f3f;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .cart-summary {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1.5rem 2rem;
+            border-top: 3px solid #4ade80;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(74, 222, 128, 0.4);
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .orders-table {
+            background: rgba(20, 40, 28, 0.8);
+            border: 2px solid #2d5f3f;
+            border-radius: 12px;
+            padding: 2rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #2d5f3f;
+        }
+
+        th {
+            background: #2d5f3f;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: rgba(45, 95, 63, 0.3);
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fbbf24;
+            color: #000;
+        }
+
+        .status-confirmed {
+            background: #4ade80;
+            color: #000;
+        }
+
+        .status-delivered {
+            background: #60a5fa;
+            color: #000;
+        }
+
+        .search-bar {
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(20, 40, 28, 0.8);
+            border: 2px solid #2d5f3f;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4ade80;
+        }
+
+        .client-view, .admin-view {
+            display: none;
+        }
+
+        .client-view.active, .admin-view.active {
+            display: block;
+        }
+
+        .order-tracking {
+            background: rgba(20, 40, 28, 0.8);
+            border: 2px solid #2d5f3f;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tracking-item {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #4ade80;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .tracking-details {
+            color: #a3e635;
+            font-size: 0.9rem;
+        }
+
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0a2e1a 0%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-container {
+            background: rgba(20, 40, 28, 0.95);
+            border: 3px solid #2d5f3f;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-logo {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4ade80;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .login-input {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #2d5f3f;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #4ade80;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .login-btn {
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(74, 222, 128, 0.4);
+        }
+
+        .stats-section {
+            background: rgba(20, 40, 28, 0.8);
+            border: 2px solid #2d5f3f;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #2d5f3f;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #a3e635;
+            font-size: 0.9rem;
+        }
+
+        .recommendations-section {
+            background: rgba(20, 40, 28, 0.8);
+            border: 2px solid #2d5f3f;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommendation-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: #000;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header" id="mainHeader" style="display: none;">
+        <div class="logo">🍃 So Food Services</div>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <div id="userInfo" style="color: #4ade80; font-weight: 600;"></div>
+            <div class="nav-buttons" id="navButtons">
+                <button class="nav-btn active" onclick="showView('client')">Commander</button>
+                <button class="nav-btn" onclick="showView('tracking')">Mes Commandes</button>
+                <button class="nav-btn" id="adminBtn" style="display: none;" onclick="showView('admin')">Espace Grossiste</button>
+                <button class="nav-btn" onclick="logout()" style="background: #dc2626;">Déconnexion</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">🍃 So Food Services</div>
+            <h2 style="color: #4ade80; margin-bottom: 2rem; text-align: center;">Connexion Client</h2>
+            <div class="login-form">
+                <input type="text" id="loginEmail" class="login-input" placeholder="Email" onkeypress="if(event.key==='Enter') login()" />
+                <input type="password" id="loginPassword" class="login-input" placeholder="Mot de passe" onkeypress="if(event.key==='Enter') login()" />
+                <button class="login-btn" onclick="login()">Se connecter</button>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(74, 222, 128, 0.1); border: 1px solid #2d5f3f; border-radius: 8px; font-size: 0.9rem;">
+                    <strong style="color: #4ade80;">Comptes de test :</strong><br>
+                    <span style="color: #a3e635;">Client :</span> brasserie@test.com / pass123<br>
+                    <span style="color: #a3e635;">Admin :</span> admin@sofood.com / admin123
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIENT VIEW -->
+    <div class="client-view active">
+        <div class="container">
+            <!-- User Stats -->
+            <div class="stats-section" id="userStats" style="display: none;">
+                <h3 style="color: #4ade80; margin-bottom: 1rem;">📊 Votre activité</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Commandes passées</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSpent">0€</div>
+                        <div class="stat-label">Dépenses totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="favoriteProduct">-</div>
+                        <div class="stat-label">Produit préféré</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations-section" id="recommendationsSection" style="display: none;">
+                <h3 style="color: #4ade80; margin-bottom: 1rem;">✨ Suggestions pour vous</h3>
+                <p style="color: #a3e635; margin-bottom: 1.5rem;">Basées sur vos commandes précédentes</p>
+                <div class="products-grid" id="recommendationsGrid"></div>
+            </div>
+
+            <div class="deadline-banner">
+                ⏰ Commandez avant 19h00 pour une livraison le lendemain matin !
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="🔍 Rechercher un produit..." oninput="searchProducts(this.value)">
+            </div>
+
+            <div class="categories">
+                <button class="category-btn active" onclick="filterCategory('all')">Tous</button>
+                <button class="category-btn" onclick="filterCategory('fruits')">🍎 Fruits</button>
+                <button class="category-btn" onclick="filterCategory('legumes')">🥬 Légumes</button>
+                <button class="category-btn" onclick="filterCategory('viandes')">🥩 Viandes</button>
+                <button class="category-btn" onclick="filterCategory('boissons')">🥤 Boissons</button>
+            </div>
+
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+
+        <div class="cart-summary">
+            <div class="cart-info">
+                <span id="cartCount">0</span> articles | Total: <span id="cartTotal">0.00</span> €
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Valider la commande 🛒</button>
+        </div>
+    </div>
+
+    <!-- TRACKING VIEW -->
+    <div class="client-view" id="trackingView">
+        <div class="container">
+            <h2 style="margin-bottom: 2rem; color: #4ade80;">📦 Suivi de vos commandes</h2>
+            <div class="order-tracking" id="orderTracking"></div>
+        </div>
+    </div>
+
+    <!-- ADMIN VIEW -->
+    <div class="admin-view">
+        <div class="container">
+            <h2 style="margin-bottom: 2rem; color: #4ade80;">📊 Tableau de bord Grossiste</h2>
+            
+            <!-- Revenue Dashboard -->
+            <div class="stats-section" style="margin-bottom: 2rem;">
+                <h3 style="color: #4ade80; margin-bottom: 1rem;">💰 Chiffre d'affaires</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="dailyRevenue">0€</div>
+                        <div class="stat-label">CA du jour</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalRevenue">0€</div>
+                        <div class="stat-label">CA total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalOrdersCount">0</div>
+                        <div class="stat-label">Commandes totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pendingOrdersCount">0</div>
+                        <div class="stat-label">En attente</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="orders-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° Commande</th>
+                            <th>Client</th>
+                            <th>Date/Heure commande</th>
+                            <th>Livraison souhaitée</th>
+                            <th>Produits</th>
+                            <th>Quantité totale</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminOrdersTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User database
+        const users = {
+            'brasserie@test.com': {
+                password: 'pass123',
+                name: 'Brasserie Le Comptoir',
+                type: 'client',
+                orderHistory: [
+                    { id: 'CMD001', date: '2025-01-15', items: [1, 2, 11, 23, 33], total: 245.50 },
+                    { id: 'CMD002', date: '2025-01-22', items: [1, 11, 12, 23, 25, 33, 35], total: 312.00 },
+                    { id: 'CMD003', date: '2025-01-29', items: [2, 11, 23, 25, 33], total: 198.50 }
+                ]
+            },
+            'admin@sofood.com': {
+                password: 'admin123',
+                name: 'Administrateur',
+                type: 'admin',
+                orderHistory: []
+            }
+        };
+
+        let currentUser = null;
+
+        const products = [
+            // Fruits
+            { id: 1, name: 'Banane Plantain', category: 'fruits', price: 4.50, unit: 'kg', image: '🍌' },
+            { id: 2, name: 'Djakato (Avocat)', category: 'fruits', price: 8.00, unit: 'kg', image: '🥑' },
+            { id: 3, name: 'Mangue', category: 'fruits', price: 6.00, unit: 'kg', image: '🥭' },
+            { id: 4, name: 'Ananas', category: 'fruits', price: 3.50, unit: 'pièce', image: '🍍' },
+            { id: 5, name: 'Papaye', category: 'fruits', price: 5.00, unit: 'kg', image: '🍈' },
+            { id: 6, name: 'Orange', category: 'fruits', price: 2.50, unit: 'kg', image: '🍊' },
+            { id: 7, name: 'Pomme', category: 'fruits', price: 3.00, unit: 'kg', image: '🍎' },
+            { id: 8, name: 'Raisin', category: 'fruits', price: 5.50, unit: 'kg', image: '🍇' },
+            { id: 9, name: 'Fraise', category: 'fruits', price: 7.00, unit: 'kg', image: '🍓' },
+            { id: 10, name: 'Pastèque', category: 'fruits', price: 2.00, unit: 'kg', image: '🍉' },
+            
+            // Légumes
+            { id: 11, name: 'Gombos', category: 'legumes', price: 4.00, unit: 'kg', image: '🫑' },
+            { id: 12, name: 'Poivron Rouge', category: 'legumes', price: 3.50, unit: 'kg', image: '🫑' },
+            { id: 13, name: 'Poivron Vert', category: 'legumes', price: 3.00, unit: 'kg', image: '🫑' },
+            { id: 14, name: 'Piment Antillais', category: 'legumes', price: 9.00, unit: 'kg', image: '🌶️' },
+            { id: 15, name: 'Tomate', category: 'legumes', price: 1.80, unit: 'kg', image: '🍅' },
+            { id: 16, name: 'Oignon', category: 'legumes', price: 1.50, unit: 'kg', image: '🧅' },
+            { id: 17, name: 'Pomme de terre', category: 'legumes', price: 1.20, unit: 'kg', image: '🥔' },
+            { id: 18, name: 'Carotte', category: 'legumes', price: 1.60, unit: 'kg', image: '🥕' },
+            { id: 19, name: 'Courgette', category: 'legumes', price: 2.20, unit: 'kg', image: '🥒' },
+            { id: 20, name: 'Aubergine', category: 'legumes', price: 2.50, unit: 'kg', image: '🍆' },
+            { id: 21, name: 'Salade Verte', category: 'legumes', price: 1.00, unit: 'pièce', image: '🥬' },
+            { id: 22, name: 'Concombre', category: 'legumes', price: 1.40, unit: 'kg', image: '🥒' },
+            
+            // Viandes
+            { id: 23, name: 'Merguez', category: 'viandes', price: 12.00, unit: 'kg', image: '🌭' },
+            { id: 24, name: 'Bœuf (Bavette)', category: 'viandes', price: 18.00, unit: 'kg', image: '🥩' },
+            { id: 25, name: 'Poulet entier', category: 'viandes', price: 6.50, unit: 'kg', image: '🍗' },
+            { id: 26, name: 'Dinde (Escalope)', category: 'viandes', price: 9.00, unit: 'kg', image: '🦃' },
+            { id: 27, name: 'Pilons de poulet', category: 'viandes', price: 5.50, unit: 'kg', image: '🍗' },
+            { id: 28, name: 'Escalope de poulet', category: 'viandes', price: 7.50, unit: 'kg', image: '🍗' },
+            { id: 29, name: 'Mouton (Gigot)', category: 'viandes', price: 22.00, unit: 'kg', image: '🥩' },
+            { id: 30, name: 'Lapin', category: 'viandes', price: 14.00, unit: 'kg', image: '🐰' },
+            { id: 31, name: 'Steak haché', category: 'viandes', price: 11.00, unit: 'kg', image: '🥩' },
+            { id: 32, name: 'Côtelettes d\'agneau', category: 'viandes', price: 25.00, unit: 'kg', image: '🥩' },
+            
+            // Boissons
+            { id: 33, name: 'Hamoud Boualem', category: 'boissons', price: 8.00, unit: 'pack de 24', image: '🥤' },
+            { id: 34, name: 'Sélécto', category: 'boissons', price: 7.50, unit: 'pack de 24', image: '🥤' },
+            { id: 35, name: 'Coca Cola DZ', category: 'boissons', price: 8.50, unit: 'pack de 24', image: '🥤' },
+            { id: 36, name: 'Mirinda', category: 'boissons', price: 8.00, unit: 'pack de 24', image: '🥤' },
+            { id: 37, name: 'Fanta', category: 'boissons', price: 8.00, unit: 'pack de 24', image: '🥤' },
+            { id: 38, name: 'Oasis', category: 'boissons', price: 9.00, unit: 'pack de 12', image: '🧃' },
+            { id: 39, name: 'Schweppes', category: 'boissons', price: 8.50, unit: 'pack de 24', image: '🥤' },
+            { id: 40, name: 'Sprite', category: 'boissons', price: 8.00, unit: 'pack de 24', image: '🥤' },
+            { id: 41, name: 'Eau minérale (1.5L)', category: 'boissons', price: 4.00, unit: 'pack de 6', image: '💧' },
+            { id: 42, name: 'Jus d\'orange', category: 'boissons', price: 12.00, unit: 'pack de 6', image: '🧃' },
+        ];
+
+        let cart = {};
+        let orders = [];
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (users[email] && users[email].password === password) {
+                currentUser = users[email];
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainHeader').style.display = 'flex';
+                document.getElementById('userInfo').textContent = `👤 ${currentUser.name}`;
+                
+                // Show admin button only for admins
+                if (currentUser.type === 'admin') {
+                    document.getElementById('adminBtn').style.display = 'block';
+                }
+
+                // Load user's past orders if client
+                if (currentUser.type === 'client' && currentUser.orderHistory.length > 0) {
+                    loadUserHistory();
+                    displayUserStats();
+                    displayRecommendations();
+                }
+
+                renderProducts();
+                updateCartDisplay();
+            } else {
+                alert('❌ Email ou mot de passe incorrect !');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            cart = {};
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainHeader').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('userStats').style.display = 'none';
+            document.getElementById('recommendationsSection').style.display = 'none';
+            document.getElementById('adminBtn').style.display = 'none';
+        }
+
+        function loadUserHistory() {
+            // Convert user's order history to orders array
+            currentUser.orderHistory.forEach((histOrder, index) => {
+                const orderItems = [];
+                let totalQty = 0;
+                
+                histOrder.items.forEach(productId => {
+                    const product = products.find(p => p.id === productId);
+                    if (product) {
+                        const qty = Math.floor(Math.random() * 5) + 1;
+                        orderItems.push({
+                            name: product.name,
+                            quantity: qty,
+                            unit: product.unit,
+                            price: product.price
+                        });
+                        totalQty += qty;
+                    }
+                });
+
+                orders.push({
+                    id: histOrder.id,
+                    client: currentUser.name,
+                    orderDate: new Date(histOrder.date).toLocaleString('fr-FR'),
+                    deliveryDate: new Date(histOrder.date).toLocaleDateString('fr-FR'),
+                    items: orderItems,
+                    totalQuantity: totalQty,
+                    total: histOrder.total,
+                    status: 'delivered'
+                });
+            });
+        }
+
+        function displayUserStats() {
+            document.getElementById('userStats').style.display = 'block';
+            
+            const totalOrders = currentUser.orderHistory.length;
+            const totalSpent = currentUser.orderHistory.reduce((sum, order) => sum + order.total, 0);
+            
+            // Find most ordered product
+            const productCounts = {};
+            currentUser.orderHistory.forEach(order => {
+                order.items.forEach(productId => {
+                    productCounts[productId] = (productCounts[productId] || 0) + 1;
+                });
+            });
+            
+            const mostOrderedId = Object.keys(productCounts).reduce((a, b) => 
+                productCounts[a] > productCounts[b] ? a : b
+            );
+            const favoriteProduct = products.find(p => p.id == mostOrderedId);
+            
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalSpent').textContent = totalSpent.toFixed(2) + '€';
+            document.getElementById('favoriteProduct').textContent = favoriteProduct ? favoriteProduct.name : '-';
+        }
+
+        function displayRecommendations() {
+            document.getElementById('recommendationsSection').style.display = 'block';
+            
+            // Get all products from order history
+            const orderedProductIds = new Set();
+            currentUser.orderHistory.forEach(order => {
+                order.items.forEach(id => orderedProductIds.add(id));
+            });
+            
+            const recommendedProducts = products.filter(p => orderedProductIds.has(p.id)).slice(0, 4);
+            
+            const grid = document.getElementById('recommendationsGrid');
+            grid.innerHTML = '';
+            
+            recommendedProducts.forEach(product => {
+                const quantity = cart[product.id] || 0;
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-name">
+                        ${product.name}
+                        <span class="recommendation-tag">Habituel</span>
+                    </div>
+                    <div class="product-price">${product.price.toFixed(2)} € / ${product.unit}</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="updateCart(${product.id}, -1)">−</button>
+                        <input type="number" class="qty-input" value="${quantity}" 
+                               onchange="setQuantity(${product.id}, this.value)" min="0">
+                        <button class="qty-btn" onclick="updateCart(${product.id}, 1)">+</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            const filteredProducts = products.filter(p => {
+                const matchesCategory = currentFilter === 'all' || p.category === currentFilter;
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            filteredProducts.forEach(product => {
+                const quantity = cart[product.id] || 0;
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price.toFixed(2)} € / ${product.unit}</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="updateCart(${product.id}, -1)">−</button>
+                        <input type="number" class="qty-input" value="${quantity}" 
+                               onchange="setQuantity(${product.id}, this.value)" min="0">
+                        <button class="qty-btn" onclick="updateCart(${product.id}, 1)">+</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateCart(productId, change) {
+            cart[productId] = Math.max(0, (cart[productId] || 0) + change);
+            if (cart[productId] === 0) delete cart[productId];
+            updateCartDisplay();
+            renderProducts();
+            if (currentUser && currentUser.type === 'client') {
+                displayRecommendations();
+            }
+        }
+
+        function setQuantity(productId, value) {
+            const qty = parseInt(value) || 0;
+            if (qty > 0) {
+                cart[productId] = qty;
+            } else {
+                delete cart[productId];
+            }
+            updateCartDisplay();
+            renderProducts();
+            if (currentUser && currentUser.type === 'client') {
+                displayRecommendations();
+            }
+        }
+
+        function updateCartDisplay() {
+            let totalItems = 0;
+            let totalPrice = 0;
+            
+            for (let id in cart) {
+                const product = products.find(p => p.id == id);
+                totalItems += cart[id];
+                totalPrice += cart[id] * product.price;
+            }
+            
+            document.getElementById('cartCount').textContent = totalItems;
+            document.getElementById('cartTotal').textContent = totalPrice.toFixed(2);
+        }
+
+        function filterCategory(category) {
+            currentFilter = category;
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts();
+        }
+
+        function searchProducts(term) {
+            searchTerm = term;
+            renderProducts();
+        }
+
+        function checkout() {
+            if (Object.keys(cart).length === 0) {
+                alert('Votre panier est vide !');
+                return;
+            }
+
+            const now = new Date();
+            const deliveryDate = new Date(now);
+            deliveryDate.setDate(deliveryDate.getDate() + 1);
+            
+            const orderItems = [];
+            let total = 0;
+            let totalQty = 0;
+
+            for (let id in cart) {
+                const product = products.find(p => p.id == id);
+                orderItems.push({
+                    name: product.name,
+                    quantity: cart[id],
+                    unit: product.unit,
+                    price: product.price
+                });
+                total += cart[id] * product.price;
+                totalQty += cart[id];
+            }
+
+            const order = {
+                id: 'CMD' + Date.now(),
+                client: currentUser ? currentUser.name : 'Client',
+                orderDate: now.toLocaleString('fr-FR'),
+                deliveryDate: deliveryDate.toLocaleDateString('fr-FR') + ' 08:00',
+                items: orderItems,
+                totalQuantity: totalQty,
+                total: total,
+                status: 'pending'
+            };
+
+            orders.push(order);
+            
+            // Update user stats
+            if (currentUser && currentUser.type === 'client') {
+                currentUser.orderHistory.push({
+                    id: order.id,
+                    date: now.toISOString().split('T')[0],
+                    items: Object.keys(cart).map(id => parseInt(id)),
+                    total: total
+                });
+                displayUserStats();
+            }
+            
+            cart = {};
+            updateCartDisplay();
+            renderProducts();
+            if (currentUser && currentUser.type === 'client') {
+                displayRecommendations();
+            }
+            renderAdminOrders();
+            renderTracking();
+            
+            alert(`✅ Commande validée !\n\nNuméro: ${order.id}\nLivraison prévue: ${order.deliveryDate}\n\nMerci de votre confiance !`);
+        }
+
+        function showView(view) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.client-view, .admin-view').forEach(v => v.classList.remove('active'));
+            
+            if (view === 'client') {
+                document.querySelector('.client-view').classList.add('active');
+            } else if (view === 'tracking') {
+                document.getElementById('trackingView').classList.add('active');
+                renderTracking();
+            } else if (view === 'admin') {
+                document.querySelector('.admin-view').classList.add('active');
+                renderAdminOrders();
+            }
+        }
+
+        function renderAdminOrders() {
+            const table = document.getElementById('adminOrdersTable');
+            table.innerHTML = '';
+            
+            // Calculate revenue metrics
+            let totalRevenue = 0;
+            let dailyRevenue = 0;
+            let pendingCount = 0;
+            const today = new Date().toLocaleDateString('fr-FR');
+            
+            orders.forEach(order => {
+                totalRevenue += order.total;
+                
+                // Check if order is from today
+                const orderDate = order.orderDate.split(' ')[0];
+                if (orderDate === today) {
+                    dailyRevenue += order.total;
+                }
+                
+                if (order.status === 'pending') {
+                    pendingCount++;
+                }
+                
+                const itemsList = order.items.map(item => 
+                    `${item.name} (${item.quantity} ${item.unit})`
+                ).join(', ');
+                
+                const statusClass = order.status === 'pending' ? 'status-pending' : 
+                                  order.status === 'confirmed' ? 'status-confirmed' : 'status-delivered';
+                const statusText = order.status === 'pending' ? 'En attente' : 
+                                 order.status === 'confirmed' ? 'Confirmée' : 'Livrée';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${order.id}</strong></td>
+                    <td>${order.client}</td>
+                    <td>${order.orderDate}</td>
+                    <td>${order.deliveryDate}</td>
+                    <td>${itemsList}</td>
+                    <td>${order.totalQuantity}</td>
+                    <td><strong>${order.total.toFixed(2)} €</strong></td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                `;
+                table.appendChild(row);
+            });
+            
+            // Update revenue dashboard
+            document.getElementById('dailyRevenue').textContent = dailyRevenue.toFixed(2) + '€';
+            document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + '€';
+            document.getElementById('totalOrdersCount').textContent = orders.length;
+            document.getElementById('pendingOrdersCount').textContent = pendingCount;
+        }
+
+        function renderTracking() {
+            const tracking = document.getElementById('orderTracking');
+            tracking.innerHTML = '';
+            
+            if (orders.length === 0) {
+                tracking.innerHTML = '<p style="text-align: center; color: #a3e635;">Aucune commande en cours</p>';
+                return;
+            }
+            
+            orders.forEach(order => {
+                const div = document.createElement('div');
+                div.className = 'tracking-item';
+                
+                const statusText = order.status === 'pending' ? '⏳ En préparation' : 
+                                 order.status === 'confirmed' ? '✅ Confirmée' : '🚚 Livrée';
+                
+                div.innerHTML = `
+                    <div class="tracking-header">
+                        <span>Commande ${order.id}</span>
+                        <span>${statusText}</span>
+                    </div>
+                    <div class="tracking-details">
+                        Passée le: ${order.orderDate}<br>
+                        Livraison prévue: ${order.deliveryDate}<br>
+                        ${order.totalQuantity} articles | ${order.total.toFixed(2)} €
+                    </div>
+                `;
+                tracking.appendChild(div);
+            });
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('App initialized');
+        });
+    </script>
+</body>
+</html>
